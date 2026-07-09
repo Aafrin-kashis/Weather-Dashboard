@@ -2,7 +2,8 @@ const form = document.getElementById('weather-form');
 const cityInput = document.getElementById('city');
 const output = document.getElementById('output');
 
-const API_KEY = 'xyz'; // Replace with your real OpenWeatherMap API key
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY; // Replace with your real OpenWeatherMap API key
+
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
