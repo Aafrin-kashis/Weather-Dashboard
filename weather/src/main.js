@@ -27,11 +27,17 @@ form.addEventListener('submit', async (e) => {
 
     output.innerHTML = `
       <h3>${data.name}, ${data.sys.country}</h3>
+
+      <img 
+      src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+      alt="Weather Icon"
+      />
+
       <p><strong>Temperature:</strong> ${data.main.temp} °C</p>
       <p><strong>Condition:</strong> ${data.weather[0].main}</p>
       <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
       <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
-    `;
+`;
   } catch (err) {
     output.textContent = `Error: ${err.message}`;
   }
