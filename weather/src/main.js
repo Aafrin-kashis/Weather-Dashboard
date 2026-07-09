@@ -2,6 +2,7 @@ const form = document.getElementById('weather-form');
 const cityInput = document.getElementById('city');
 const output = document.getElementById('output');
 const loader = document.getElementById('loader');
+const locationBtn = document.getElementById("location-btn");
 
 const historyList = document.getElementById('history-list');
 const clearHistoryBtn = document.getElementById('clear-history');
@@ -100,5 +101,88 @@ clearHistoryBtn.addEventListener("click",()=>{
   searchHistory = [];
 
   displayHistory();
+
+});
+
+//current Location
+locationBtn.addEventListener("click", () => {
+
+  if(navigator.geolocation){
+
+    navigator.geolocation.getCurrentPosition(
+      
+      async (position)=>{
+
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+
+        loader.classList.remove("hidden");
+        output.innerHTML = "";
+
+
+        try{
+
+          const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+          );
+
+
+          if(!res.ok){
+            throw new Error("Unable to fetch location weather");
+          }
+
+
+          const data = await res.json();
+
+
+          loader.classList.add("hidden");
+
+
+          output.innerHTML = `
+            <h3>${data.name}, ${data.sys.country}</h3>
+
+            <img 
+            src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+            alt="Weather Icon"
+            />
+
+            <p><strong>Temperature:</strong> ${data.main.temp} °C</p>
+
+            <p><strong>Condition:</strong> ${data.weather[0].main}</p>
+
+            <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+
+            <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+          `;
+
+
+        }
+        catch(error){
+
+          loader.classList.add("hidden");
+
+          output.textContent = error.message;
+
+        }
+
+      },
+
+
+      ()=>{
+        output.textContent = 
+        "Location permission denied.";
+      }
+
+    );
+
+
+  }
+  else{
+
+    output.textContent =
+    "Geolocation is not supported by your browser.";
+
+  }
 
 });
