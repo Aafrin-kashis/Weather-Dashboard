@@ -2,7 +2,29 @@ const form = document.getElementById('weather-form');
 const cityInput = document.getElementById('city');
 const output = document.getElementById('output');
 
+const historyList = document.getElementById('history-list');
+const clearHistoryBtn = document.getElementById('clear-history');
+
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY; // Replace with your real OpenWeatherMap API key
+let searchHistory = JSON.parse(localStorage.getItem("weatherHistory")) || [];
+
+
+function displayHistory(){
+
+  historyList.innerHTML = "";
+
+  searchHistory.forEach(city => {
+
+    const li = document.createElement("li");
+    li.textContent = city;
+
+    historyList.appendChild(li);
+
+  });
+
+}
+
+displayHistory();
 
 
 form.addEventListener('submit', async (e) => {
@@ -24,6 +46,27 @@ form.addEventListener('submit', async (e) => {
     }
 
     const data = await res.json();
+    // Save search history
+
+searchHistory = searchHistory.filter(
+  item => item.toLowerCase() !== city.toLowerCase()
+);
+
+
+searchHistory.unshift(city);
+
+
+// only last 3 searches
+searchHistory = searchHistory.slice(0,3);
+
+
+localStorage.setItem(
+  "weatherHistory",
+  JSON.stringify(searchHistory)
+);
+
+
+displayHistory();
 
     output.innerHTML = `
       <h3>${data.name}, ${data.sys.country}</h3>
@@ -41,4 +84,14 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     output.textContent = `Error: ${err.message}`;
   }
+});
+
+clearHistoryBtn.addEventListener("click",()=>{
+
+  localStorage.removeItem("weatherHistory");
+
+  searchHistory = [];
+
+  displayHistory();
+
 });

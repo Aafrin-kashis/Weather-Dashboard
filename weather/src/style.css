@@ -41,3 +41,26 @@ button {
 .weather-output img {
   width: 100px;
 }
+
+.history-box{
+  margin-top:20px;
+}
+
+
+.history-box ul{
+  padding:0;
+  list-style:none;
+}
+
+
+.history-box li{
+  background:#f1f5f9;
+  margin:5px;
+  padding:8px;
+  border-radius:5px;
+}
+
+
+#clear-history{
+  background:#dc2626;
+}
