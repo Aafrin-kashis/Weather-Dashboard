@@ -1,6 +1,7 @@
 const form = document.getElementById('weather-form');
 const cityInput = document.getElementById('city');
 const output = document.getElementById('output');
+const loader = document.getElementById('loader');
 
 const historyList = document.getElementById('history-list');
 const clearHistoryBtn = document.getElementById('clear-history');
@@ -36,7 +37,8 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  output.textContent = 'Loading...';
+  loader.classList.remove("hidden");
+   output.innerHTML = "";
 
   try {
     const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
@@ -46,6 +48,7 @@ form.addEventListener('submit', async (e) => {
     }
 
     const data = await res.json();
+    loader.classList.add("hidden");
     // Save search history
 
 searchHistory = searchHistory.filter(
@@ -82,8 +85,12 @@ displayHistory();
       <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
 `;
   } catch (err) {
+
+    loader.classList.add("hidden");
+
     output.textContent = `Error: ${err.message}`;
-  }
+
+}
 });
 
 clearHistoryBtn.addEventListener("click",()=>{
